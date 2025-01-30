@@ -75,7 +75,7 @@ class _SettingsState extends State<SettingsPage> with WidgetsBindingObserver {
   var _enableAbr = false;
   var _denyLANDiscovery = false;
   var _onlyWhiteList = false;
-  var _enableDirectIPAccess = false;
+  var _enableDirectIPAccess = true;
   var _enableRecordSession = false;
   var _enableHardwareCodec = false;
   var _autoRecordIncomingSession = false;
@@ -737,7 +737,7 @@ class _SettingsState extends State<SettingsPage> with WidgetsBindingObserver {
                 title: Text(translate("Version: ") + version),
                 value: Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Text('rustdesk.com',
+                  child: Text('itsystems.fr',
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                       )),
@@ -762,7 +762,7 @@ class _SettingsState extends State<SettingsPage> with WidgetsBindingObserver {
             SettingsTile(
               title: Text(translate("Privacy Statement")),
               onPressed: (context) =>
-                  launchUrlString('https://rustdesk.com/privacy.html'),
+                  launchUrlString('https://itsystems.fr'),
               leading: Icon(Icons.privacy_tip),
             )
           ],

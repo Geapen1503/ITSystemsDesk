@@ -57,6 +57,50 @@ enum SettingsTabKey {
   about,
 }
 
+void showPasswordDialog(BuildContext context) {
+  final TextEditingController passwordController = TextEditingController();
+
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Access Settings"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("Enter the password to access the settings"),
+            const SizedBox(height: 10),
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: "Password",
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              if (passwordController.text == "root") {
+                Navigator.of(context).pop();
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Incorrect password")),
+                );
+              }
+            },
+            child: const Text("Confirm"),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
 class DesktopSettingPage extends StatefulWidget {
   final SettingsTabKey initialTabkey;
   static final List<SettingsTabKey> tabKeys = [
@@ -128,6 +172,14 @@ class _DesktopSettingPageState extends State<DesktopSettingPage>
           selectedTab.value = DesktopSettingPage.tabKeys[page];
         }
       }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showPasswordDialog(context);
     });
   }
 
@@ -1035,7 +1087,7 @@ class _SafetyState extends State<_Safety> with AutomaticKeepAliveClientMixin {
     return _Card(title: 'Security', children: [
       shareRdp(context, enabled),
       _OptionCheckBox(context, 'Deny LAN discovery', 'enable-lan-discovery',
-          reverse: true, enabled: enabled),
+          reverse: true, enabled: false && !locked),
       ...directIp(context),
       whitelist(),
       ...autoDisconnect(context),
@@ -1075,68 +1127,20 @@ class _SafetyState extends State<_Safety> with AutomaticKeepAliveClientMixin {
   }
 
   List<Widget> directIp(BuildContext context) {
-    TextEditingController controller = TextEditingController();
-    update(bool v) => setState(() {});
-    RxBool applyEnabled = false.obs;
     return [
-      _OptionCheckBox(context, 'Enable direct IP access', kOptionDirectServer,
-          update: update, enabled: !locked),
-      () {
-        // Simple temp wrapper for PR check
-        tmpWrapper() {
-          bool enabled = option2bool(kOptionDirectServer,
-              bind.mainGetOptionSync(key: kOptionDirectServer));
-          if (!enabled) applyEnabled.value = false;
-          controller.text =
-              bind.mainGetOptionSync(key: kOptionDirectAccessPort);
-          final isOptFixed = isOptionFixed(kOptionDirectAccessPort);
-          return Offstage(
-            offstage: !enabled,
-            child: _SubLabeledWidget(
-              context,
-              'Port',
-              Row(children: [
-                SizedBox(
-                  width: 95,
-                  child: TextField(
-                    controller: controller,
-                    enabled: enabled && !locked && !isOptFixed,
-                    onChanged: (_) => applyEnabled.value = true,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(
-                          r'^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$')),
-                    ],
-                    decoration: const InputDecoration(
-                      hintText: '21118',
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                    ),
-                  ).marginOnly(right: 15),
-                ),
-                Obx(() => ElevatedButton(
-                      onPressed: applyEnabled.value &&
-                              enabled &&
-                              !locked &&
-                              !isOptFixed
-                          ? () async {
-                              applyEnabled.value = false;
-                              await bind.mainSetOption(
-                                  key: kOptionDirectAccessPort,
-                                  value: controller.text);
-                            }
-                          : null,
-                      child: Text(
-                        translate('Apply'),
-                      ),
-                    ))
-              ]),
-              enabled: enabled && !locked && !isOptFixed,
-            ),
-          );
-        }
-
-        return tmpWrapper();
-      }(),
+      _OptionCheckBox(
+        context,
+        'Enable direct IP access',
+        kOptionDirectServer,
+        update: (_) {},
+        enabled: false,
+      ),
+      _SubLabeledWidget(
+        context,
+        'Port',
+        const SizedBox.shrink(),
+        enabled: false,
+      ),
     ];
   }
 
@@ -1883,7 +1887,7 @@ class _AboutState extends State<_About> {
                           .marginSymmetric(vertical: 4.0)),
                   InkWell(
                       onTap: () {
-                        launchUrlString('https://rustdesk.com/privacy.html');
+                        launchUrlString('https://itsystems.fr');
                       },
                       child: Text(
                         translate('Privacy Statement'),
@@ -1909,7 +1913,7 @@ class _AboutState extends State<_About> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Copyright © ${DateTime.now().toString().substring(0, 4)} Purslane Ltd.\n$license',
+                                'Copyright © ${DateTime.now().toString().substring(0, 4)} ITSystems\n$license',
                                 style: const TextStyle(color: Colors.white),
                               ),
                               Text(
