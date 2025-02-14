@@ -1,0 +1,33 @@
+Rustdesk description :
+
+flutter/Windows/Runner/Runner.rc
+VALUE "FileDescription", "RustDesk Remote Desktop" "\0"
+
+libs/portable/cargo.toml
+description = "RustDesk Remote Desktop"
+FileDescription = "ITSystems Remote Desktop"
+
+cargo.toml
+FileDescription = "ITsystems Remote Desktop"
+description = "ITSystems Remote Desktop"
+
+RustDesk Copyright/company :
+
+index.tis 
+<div style='background: #2c8cff; color: white; padding: 1em; margin-top: 1em;'>Copyright &copy; 2024 Purslane Ltd.\
+
+flutter/Windows/Runner/Runner.rc
+VALUE "LegalCopyright", "Copyright © 2024 Purslane Ltd. All rights reserved." "\0"
+
+cargo.toml
+LegalCopyright = "Copyright © 2024 Purslane Ltd. All rights reserved."
+
+libs/portable/cargo.toml
+LegalCopyright = "Copyright © 2024 Purslane Ltd. All rights reserved."
+
+flutter/../AppInfo.xcconfig
+PRODUCT_COPYRIGHT = Copyright © 2024 Purslane Ltd. All rights reserved.
+
+desktop_setting_page.dart
+
+

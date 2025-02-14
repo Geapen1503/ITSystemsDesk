@@ -1,0 +1,20 @@
+Après avoir exécuté le script build ps1 pour build, il faut exécuter les commandes flutter suivante :
+
+cd flutter
+
+cargo clean
+flutter clean
+flutter pub get
+cargo build
+flutter build Windows # ou ios, web, apk
+
+Si le script ps1 est exécuté au préalable, les commandes cargo clean et cargo build ne sont pas nécessaires.
+Juste ces commandes du coup :
+
+flutter clean
+flutter pub get
+flutter build windows # ou ios, web, apk
+
+l'exe custom se trouvera ensuite non pas à la racine mais ici :
+build\windows\x64\runner\Release\itsystemsdesk.exe
+
